@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Substo - Custom Home Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        .device-frame {
+            width: 375px;
+            height: 750px;
+            border: 2px solid #ddd;
+            border-radius: 45px;
+            overflow: hidden;
+            position: relative;
+            margin: 20px auto;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        /* Dynamic Island */
+        .dynamic-island {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background-color: #000;
+            border-radius: 20px;
+            z-index: 10;
+        }
+        /* Dark mode dynamic island border */
+        .dark-frame .dynamic-island {
+            border: 1px solid #333;
+        }
+        .content-container {
+            padding-top: 60px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .screen-label {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .subscription-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .subscription-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.35s;
+            stroke-width: 8;
+            fill: transparent;
+        }
+        .add-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Substo Custom Home Design</h1>
+        
+        <div class="grid-container">
+            <!-- Custom Home Page - Light Mode -->
+            <div>
+                <p class="screen-label">Custom Home Page - Light Mode</p>
+                <div class="device-frame bg-white">
+                    <div class="dynamic-island"></div>
+                    <div class="flex flex-col h-full">
+                        <div class="content-container px-5">
+                            <!-- Header Section -->
+                            <div class="flex justify-between items-center mb-8">
+                                <div>
+                                    <h1 class="text-2xl font-bold text-gray-900">My Subscriptions</h1>
+                                    <p class="text-sm text-gray-500">April 2023</p>
+                                </div>
+                                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </div>
+                            
+                            <!-- Monthly Spending -->
+                            <div class="mb-8">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h2 class="font-semibold text-gray-900">Monthly Spending</h2>
+                                    <span class="text-sm text-gray-500">Last 30 days</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="relative w-20 h-20 mr-4">
+                                        <svg class="progress-ring" width="80" height="80">
+                                            <circle class="progress-ring-circle" stroke="#E5E7EB" cx="40" cy="40" r="32" stroke-dasharray="201" stroke-dashoffset="0" />
+                                            <circle class="progress-ring-circle" stroke="#111827" cx="40" cy="40" r="32" stroke-dasharray="201" stroke-dashoffset="50" />
+                                        </svg>
+                                        <div class="absolute inset-0 flex items-center justify-center text-sm font-semibold">75%</div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-2xl font-bold text-gray-900">€68.99</h3>
+                                        <p class="text-sm text-gray-500">of €90 budget</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Upcoming Renewals -->
+                            <div class="mb-8">
+                                <h2 class="font-semibold text-gray-900 mb-3">Upcoming Renewals</h2>
+                                
+                                <!-- Timeline Bar -->
+                                <div class="relative h-16 mb-4">
+                                    <!-- Timeline line -->
+                                    <div class="absolute top-7 left-0 right-0 h-0.5 bg-gray-200"></div>
+                                    
+                                    <!-- Today marker -->
+                                    <div class="absolute top-4 left-0">
+                                        <div class="w-0.5 h-6 bg-gray-400 mx-auto"></div>
+                                        <p class="text-xs text-gray-500 mt-1">Today</p>
+                                    </div>
+                                    
+                                    <!-- Netflix marker -->
+                                    <div class="absolute top-1 left-1/4 transform -translate-x-1/2">
+                                        <div class="subscription-logo mx-auto bg-white border border-gray-200">
+                                            <img src="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.png" alt="Netflix">
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">Apr 15</p>
+                                    </div>
+                                    
+                                    <!-- Spotify marker -->
+                                    <div class="absolute top-1 left-2/3 transform -translate-x-1/2">
+                                        <div class="subscription-logo mx-auto bg-white border border-gray-200">
+                                            <img src="https://open.spotifycdn.com/cdn/images/favicon32.b64ecc03.png" alt="Spotify">
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">Apr 21</p>
+                                    </div>
+                                    
+                                    <!-- Dropbox marker -->
+                                    <div class="absolute top-1 right-0">
+                                        <div class="subscription-logo mx-auto bg-white border border-gray-200">
+                                            <img src="https://www.dropbox.com/static/30168/images/favicon.ico" alt="Dropbox">
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">May 3</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Active Subscriptions -->
+                            <div>
+                                <div class="flex justify-between items-center mb-3">
+                                    <h2 class="font-semibold text-gray-900">Active Subscriptions</h2>
+                                    <span class="text-sm font-medium text-gray-900">8 total</span>
+                                </div>
+                                
+                                <div class="space-y-3">
+                                    <!-- Netflix Subscription -->
+                                    <div class="flex items-center p-3 bg-gray-50 rounded-xl">
+                                        <div class="subscription-logo mr-3">
+                                            <img src="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.png" alt="Netflix">
+                                        </div>
+                                        <div class="flex-grow">
+                                            <div class="flex justify-between items-center">
+                                                <h3 class="font-semibold">Netflix</h3>
+                                                <span class="font-bold">€14.99</span>
+                                            </div>
+                                            <div class="flex justify-between items-center text-xs text-gray-500">
+                                                <span>Premium Plan</span>
+                                                <span>Monthly</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Spotify Subscription -->
+                                    <div class="flex items-center p-3 bg-gray-50 rounded-xl">
+                                        <div class="subscription-logo mr-3">
+                                            <img src="https://open.spotifycdn.com/cdn/images/favicon32.b64ecc03.png" alt="Spotify">
+                                        </div>
+                                        <div class="flex-grow">
+                                            <div class="flex justify-between items-center">
+                                                <h3 class="font-semibold">Spotify</h3>
+                                                <span class="font-bold">€9.99</span>
+                                            </div>
+                                            <div class="flex justify-between items-center text-xs text-gray-500">
+                                                <span>Family Plan</span>
+                                                <span>Monthly</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Dropbox Subscription -->
+                                    <div class="flex items-center p-3 bg-gray-50 rounded-xl">
+                                        <div class="subscription-logo mr-3">
+                                            <img src="https://www.dropbox.com/static/30168/images/favicon.ico" alt="Dropbox">
+                                        </div>
+                                        <div class="flex-grow">
+                                            <div class="flex justify-between items-center">
+                                                <h3 class="font-semibold">Dropbox</h3>
+                                                <span class="font-bold">€8.99</span>
+                                            </div>
+                                            <div class="flex justify-between items-center text-xs text-gray-500">
+                                                <span>Pro Plan</span>
+                                                <span>Monthly</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- See All Button -->
+                                    <button class="w-full py-3 text-center text-sm font-medium text-gray-700 border border-gray-300 rounded-xl hover:bg-gray-50 transition">
+                                        See All Subscriptions
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Add New Button (Floating) -->
+                            <div class="add-btn bg-black text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Custom Home Page - Dark Mode -->
+            <div>
+                <p class="screen-label">Custom Home Page - Dark Mode</p>
+                <div class="device-frame bg-gray-900 dark-frame">
+                    <div class="dynamic-island"></div>
+                    <div class="flex flex-col h-full">
+                        <div class="content-container px-5">
+                            <!-- Header Section -->
+                            <div class="flex justify-between items-center mb-8">
+                                <div>
+                                    <h1 class="text-2xl font-bold text-white">My Subscriptions</h1>
+                                    <p class="text-sm text-gray-400">April 2023</p>
+                                </div>
+                                <div class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </div>
+                            
+                            <!-- Monthly Spending -->
+                            <div class="mb-8">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h2 class="font-semibold text-white">Monthly Spending</h2>
+                                    <span class="text-sm text-gray-400">Last 30 days</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="relative w-20 h-20 mr-4">
+                                        <svg class="progress-ring" width="80" height="80">
+                                            <circle class="progress-ring-circle" stroke="#374151" cx="40" cy="40" r="32" stroke-dasharray="201" stroke-dashoffset="0" />
+                                            <circle class="progress-ring-circle" stroke="#E5E7EB" cx="40" cy="40" r="32" stroke-dasharray="201" stroke-dashoffset="50" />
+                                        </svg>
+                                        <div class="absolute inset-0 flex items-center justify-center text-sm font-semibold text-white">75%</div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-2xl font-bold text-white">€68.99</h3>
+                                        <p class="text-sm text-gray-400">of €90 budget</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Upcoming Renewals -->
+                            <div class="mb-8">
+                                <h2 class="font-semibold text-white mb-3">Upcoming Renewals</h2>
+                                
+                                <!-- Timeline Bar -->
+                                <div class="relative h-16 mb-4">
+                                    <!-- Timeline line -->
+                                    <div class="absolute top-7 left-0 right-0 h-0.5 bg-gray-700"></div>
+                                    
+                                    <!-- Today marker -->
+                                    <div class="absolute top-4 left-0">
+                                        <div class="w-0.5 h-6 bg-gray-500 mx-auto"></div>
+                                        <p class="text-xs text-gray-400 mt-1">Today</p>
+                                    </div>
+                                    
+                                    <!-- Netflix marker -->
+                                    <div class="absolute top-1 left-1/4 transform -translate-x-1/2">
+                                        <div class="subscription-logo mx-auto bg-gray-800 border border-gray-700">
+                                            <img src="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.png" alt="Netflix">
+                                        </div>
+                                        <p class="text-xs text-gray-400 mt-1">Apr 15</p>
+                                    </div>
+                                    
+                                    <!-- Spotify marker -->
+                                    <div class="absolute top-1 left-2/3 transform -translate-x-1/2">
+                                        <div class="subscription-logo mx-auto bg-gray-800 border border-gray-700">
+                                            <img src="https://open.spotifycdn.com/cdn/images/favicon32.b64ecc03.png" alt="Spotify">
+                                        </div>
+                                        <p class="text-xs text-gray-400 mt-1">Apr 21</p>
+                                    </div>
+                                    
+                                    <!-- Dropbox marker -->
+                                    <div class="absolute top-1 right-0">
+                                        <div class="subscription-logo mx-auto bg-gray-800 border border-gray-700">
+                                            <img src="https://www.dropbox.com/static/30168/images/favicon.ico" alt="Dropbox">
+                                        </div>
+                                        <p class="text-xs text-gray-400 mt-1">May 3</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Active Subscriptions -->
+                            <div>
+                                <div class="flex justify-between items-center mb-3">
+                                    <h2 class="font-semibold text-white">Active Subscriptions</h2>
+                                    <span class="text-sm font-medium text-white">8 total</span>
+                                </div>
+                                
+                                <div class="space-y-3">
+                                    <!-- Netflix Subscription -->
+                                    <div class="flex items-center p-3 bg-gray-800 rounded-xl">
+                                        <div class="subscription-logo mr-3">
+                                            <img src="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.png" alt="Netflix">
+                                        </div>
+                                        <div class="flex-grow">
+                                            <div class="flex justify-between items-center">
+                                                <h3 class="font-semibold text-white">Netflix</h3>
+                                                <span class="font-bold text-white">€14.99</span>
+                                            </div>
+                                            <div class="flex justify-between items-center text-xs text-gray-400">
+                                                <span>Premium Plan</span>
+                                                <span>Monthly</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Spotify Subscription -->
+                                    <div class="flex items-center p-3 bg-gray-800 rounded-xl">
+                                        <div class="subscription-logo mr-3">
+                                            <img src="https://open.spotifycdn.com/cdn/images/favicon32.b64ecc03.png" alt="Spotify">
+                                        </div>
+                                        <div class="flex-grow">
+                                            <div class="flex justify-between items-center">
+                                                <h3 class="font-semibold text-white">Spotify</h3>
+                                                <span class="font-bold text-white">€9.99</span>
+                                            </div>
+                                            <div class="flex justify-between items-center text-xs text-gray-400">
+                                                <span>Family Plan</span>
+                                                <span>Monthly</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Dropbox Subscription -->
+                                    <div class="flex items-center p-3 bg-gray-800 rounded-xl">
+                                        <div class="subscription-logo mr-3">
+                                            <img src="https://www.dropbox.com/static/30168/images/favicon.ico" alt="Dropbox">
+                                        </div>
+                                        <div class="flex-grow">
+                                            <div class="flex justify-between items-center">
+                                                <h3 class="font-semibold text-white">Dropbox</h3>
+                                                <span class="font-bold text-white">€8.99</span>
+                                            </div>
+                                            <div class="flex justify-between items-center text-xs text-gray-400">
+                                                <span>Pro Plan</span>
+                                                <span>Monthly</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- See All Button -->
+                                    <button class="w-full py-3 text-center text-sm font-medium text-white border border-gray-700 rounded-xl hover:bg-gray-700 transition">
+                                        See All Subscriptions
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Add New Button (Floating) -->
+                            <div class="add-btn bg-white text-black">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

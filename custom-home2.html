@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Substo - Custom Home Design 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        .device-frame {
+            width: 375px;
+            height: 750px;
+            border: 2px solid #ddd;
+            border-radius: 45px;
+            overflow: hidden;
+            position: relative;
+            margin: 20px auto;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        /* Dynamic Island */
+        .dynamic-island {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background-color: #000;
+            border-radius: 20px;
+            z-index: 10;
+        }
+        /* Dark mode dynamic island border */
+        .dark-frame .dynamic-island {
+            border: 1px solid #333;
+        }
+        .content-container {
+            padding-top: 60px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .screen-label {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .subscription-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .subscription-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .visualization-container {
+            position: relative;
+            width: 100%;
+            height: 240px;
+            margin: 0 auto;
+            border-radius: 20px;
+            overflow: hidden;
+            padding: 15px;
+        }
+        .subscription-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #10B981;
+            color: white;
+            border-radius: 12px;
+            padding: 4px 8px;
+            font-weight: 600;
+            font-size: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 20;
+        }
+        .card {
+            border-radius: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .dark-card {
+            border-radius: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .payment-value {
+            font-size: 1.5rem;
+            line-height: 1.25;
+            font-weight: 700;
+        }
+        .add-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .treemap-rect {
+            stroke: #fff;
+            stroke-width: 1px;
+            transition: opacity 0.2s;
+        }
+        .treemap-rect:hover {
+            opacity: 0.8;
+            cursor: pointer;
+        }
+        .treemap-label {
+            font-weight: 600;
+            pointer-events: none;
+            text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
+        }
+        .treemap-price {
+            font-size: 10px;
+            font-weight: 600;
+            pointer-events: none;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #000;
+            padding: 1px 4px;
+            border-radius: 8px;
+        }
+        .dark-treemap-price {
+            background-color: rgba(55, 65, 81, 0.9);
+            color: white;
+        }
+        /* Bubble chart styles */
+        .bubble {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .bubble:hover {
+            filter: brightness(1.1);
+        }
+        .bubble-label {
+            font-weight: 600;
+            pointer-events: none;
+        }
+        .bubble-price {
+            font-size: 10px;
+            font-weight: 500;
+            pointer-events: none;
+            background-color: rgba(255, 255, 255, 0.85);
+            color: #000;
+            padding: 1px 4px;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .dark-bubble-price {
+            background-color: rgba(55, 65, 81, 0.85);
+            color: white;
+        }
+        .logo-container {
+            position: absolute;
+            width: 85%;
+            height: 85%;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 0;
+            border: 0.5px solid rgba(0, 0, 0, 0.03);
+        }
+        .dark-logo-container {
+            position: absolute;
+            width: 85%;
+            height: 85%;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 0;
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .price-tag {
+            position: absolute;
+            background: #10B981;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 11px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            z-index: 2;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .dark-price-tag {
+            background: #059669;
+        }
+        .price-tag-bg {
+            fill: #10B981;
+            stroke: white;
+            stroke-width: 0.5;
+            stroke-opacity: 0.3;
+            opacity: 0.9;
+        }
+        .dark-price-tag-bg {
+            fill: #059669;
+            stroke: rgba(255, 255, 255, 0.2);
+        }
+        .price-tag-text {
+            fill: white;
+            font-size: 10px;
+            font-weight: 600;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+        .bubble-name {
+            font-size: 11px;
+            font-weight: 500;
+            fill-opacity: 0.85;
+            pointer-events: none;
+        }
+        /* Ensure price tags have highest z-index */
+        .price-tag-group {
+            position: relative;
+            z-index: 20 !important; /* Higher z-index to ensure it appears above logos */
+        }
+        .dark-price-tag-group {
+            z-index: 10;
+            position: absolute;
+            transform: translate(calc(50% - 2px), -50%);
+            right: 0;
+            top: 50%;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Substo Custom Home Design 2</h1>
+        
+        <div class="grid-container">
+            <!-- Custom Home Page 2 - Light Mode -->
+            <div>
+                <p class="screen-label">Custom Home Page 2 - Light Mode</p>
+                <div class="device-frame bg-white">
+                    <div class="dynamic-island"></div>
+                    <div class="flex flex-col h-full">
+                        <div class="content-container px-5">
+                            <!-- Header -->
+                            <div class="flex justify-between items-center mb-6">
+                                <h1 class="text-2xl font-bold text-gray-900">Overview</h1>
+                                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </div>
+                            
+                            <!-- Subscription Visualization -->
+                            <div class="mb-8">
+                                <div class="visualization-container bg-gray-100 bg-opacity-60" id="light-visualization">
+                                    <div class="subscription-badge">
+                                        11 Subscriptions
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Payment Stats Cards -->
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <!-- Due This Month -->
+                                <div class="card bg-white p-4">
+                                    <div class="flex items-center space-x-2 text-gray-500 mb-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span class="text-xs">Due this month</span>
+                                    </div>
+                                    <h2 class="payment-value text-gray-900">€68.99</h2>
+                                </div>
+                                
+                                <!-- Yearly -->
+                                <div class="card bg-white p-4">
+                                    <div class="flex items-center space-x-2 text-gray-500 mb-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span class="text-xs">Yearly</span>
+                                    </div>
+                                    <h2 class="payment-value text-gray-900">€1,086.45</h2>
+                                </div>
+                            </div>
+                            
+                            <!-- Add New Button Card -->
+                            <div class="bg-black text-white rounded-xl flex items-center justify-center p-4 cursor-pointer hover:bg-gray-800 transition mb-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span class="font-medium">Add new</span>
+                            </div>
+                            
+                            <!-- Up Next Section -->
+                            <div class="mb-6">
+                                <h2 class="text-xl font-bold text-gray-900 mb-3">Up next</h2>
+                                
+                                <div class="space-y-3">
+                                    <!-- Netflix Payment Card -->
+                                    <div class="card bg-white p-3 flex items-center">
+                                        <div class="subscription-logo mr-3">
+                                            <img src="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.png" alt="Netflix">
+                                        </div>
+                                        <div class="flex-grow">
+                                            <div class="flex justify-between items-center">
+                                                <h3 class="font-semibold">Netflix</h3>
+                                                <span class="font-bold">€14.99</span>
+                                            </div>
+                                            <div class="flex justify-between items-center">
+                                                <p class="text-xs text-gray-500">Premium Plan</p>
+                                                <p class="text-xs text-gray-500">in 3 days</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Dropbox Payment Card -->
+                                    <div class="card bg-white p-3 flex items-center">
+                                        <div class="subscription-logo mr-3">
+                                            <img src="https://www.dropbox.com/static/30168/images/favicon.ico" alt="Dropbox">
+                                        </div>
+                                        <div class="flex-grow">
+                                            <div class="flex justify-between items-center">
+                                                <h3 class="font-semibold">Dropbox</h3>
+                                                <span class="font-bold">€8.99</span>
+                                            </div>
+                                            <div class="flex justify-between items-center">
+                                                <p class="text-xs text-gray-500">Pro Plan</p>
+                                                <p class="text-xs text-gray-500">in 1 week</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- All Subscriptions Button -->
+                            <button class="w-full py-3 text-center text-sm font-medium text-gray-700 border border-gray-300 rounded-xl hover:bg-gray-50 transition">
+                                View All Subscriptions
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Custom Home Page 2 - Dark Mode -->
+            <div>
+                <p class="screen-label">Custom Home Page 2 - Dark Mode</p>
+                <div class="device-frame bg-gray-900 dark-frame">
+                    <div class="dynamic-island"></div>
+                    <div class="flex flex-col h-full">
+                        <div class="content-container px-5">
+                            <!-- Header -->
+                            <div class="flex justify-between items-center mb-6">
+                                <h1 class="text-2xl font-bold text-white">Overview</h1>
+                                <div class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </div>
+                            
+                            <!-- Subscription Visualization -->
+                            <div class="mb-8">
+                                <div class="visualization-container bg-gray-800 bg-opacity-60" id="dark-visualization">
+                                    <div class="subscription-badge">
+                                        11 Subscriptions
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Payment Stats Cards -->
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <!-- Due This Month -->
+                                <div class="dark-card bg-gray-800 p-4">
+                                    <div class="flex items-center space-x-2 text-gray-400 mb-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span class="text-xs">Due this month</span>
+                                    </div>
+                                    <h2 class="payment-value text-white">€68.99</h2>
+                                </div>
+                                
+                                <!-- Yearly -->
+                                <div class="dark-card bg-gray-800 p-4">
+                                    <div class="flex items-center space-x-2 text-gray-400 mb-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span class="text-xs">Yearly</span>
+                                    </div>
+                                    <h2 class="payment-value text-white">€1,086.45</h2>
+                                </div>
+                            </div>
+                            
+                            <!-- Add New Button Card -->
+                            <div class="bg-white text-black rounded-xl flex items-center justify-center p-4 cursor-pointer hover:bg-gray-100 transition mb-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span class="font-medium">Add new</span>
+                            </div>
+                            
+                            <!-- Up Next Section -->
+                            <div class="mb-6">
+                                <h2 class="text-xl font-bold text-white mb-3">Up next</h2>
+                                
+                                <div class="space-y-3">
+                                    <!-- Netflix Payment Card -->
+                                    <div class="dark-card bg-gray-800 p-3 flex items-center">
+                                        <div class="subscription-logo mr-3">
+                                            <img src="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.png" alt="Netflix">
+                                        </div>
+                                        <div class="flex-grow">
+                                            <div class="flex justify-between items-center">
+                                                <h3 class="font-semibold text-white">Netflix</h3>
+                                                <span class="font-bold text-white">€14.99</span>
+                                            </div>
+                                            <div class="flex justify-between items-center">
+                                                <p class="text-xs text-gray-400">Premium Plan</p>
+                                                <p class="text-xs text-gray-400">in 3 days</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Dropbox Payment Card -->
+                                    <div class="dark-card bg-gray-800 p-3 flex items-center">
+                                        <div class="subscription-logo mr-3">
+                                            <img src="https://www.dropbox.com/static/30168/images/favicon.ico" alt="Dropbox">
+                                        </div>
+                                        <div class="flex-grow">
+                                            <div class="flex justify-between items-center">
+                                                <h3 class="font-semibold text-white">Dropbox</h3>
+                                                <span class="font-bold text-white">€8.99</span>
+                                            </div>
+                                            <div class="flex justify-between items-center">
+                                                <p class="text-xs text-gray-400">Pro Plan</p>
+                                                <p class="text-xs text-gray-400">in 1 week</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- All Subscriptions Button -->
+                            <button class="w-full py-3 text-center text-sm font-medium text-white border border-gray-700 rounded-xl hover:bg-gray-700 transition">
+                                View All Subscriptions
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Subscription data
+        const subscriptionData = [
+            { 
+                name: "Netflix", 
+                value: 14.99, 
+                logo: "https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.png", 
+                color: "#E50914",
+                bgColor: "#000000"
+            },
+            { 
+                name: "Spotify", 
+                value: 9.99, 
+                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/1024px-Spotify_logo_without_text.svg.png", 
+                color: "#1DB954",
+                bgColor: "#191414"
+            },
+            { 
+                name: "Apple Music", 
+                value: 8.99, 
+                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Apple_Music_Icon.svg/2048px-Apple_Music_Icon.svg.png", 
+                color: "#FA243C",
+                bgColor: "#FFFFFF"
+            },
+            { 
+                name: "Dropbox", 
+                value: 8.99, 
+                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Dropbox_logo.svg/2560px-Dropbox_logo.svg.png", 
+                color: "#0061FF",
+                bgColor: "#FFFFFF"
+            },
+            { 
+                name: "HBO Max", 
+                value: 7.99, 
+                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/HBO_Max_Logo.svg/2560px-HBO_Max_Logo.svg.png", 
+                color: "#5C0A81",
+                bgColor: "#FFFFFF"
+            },
+            { 
+                name: "YouTube Premium", 
+                value: 5.99, 
+                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/1024px-YouTube_full-color_icon_%282017%29.svg.png", 
+                color: "#FF0000",
+                bgColor: "#FFFFFF"
+            },
+            { 
+                name: "New York Times", 
+                value: 4.99, 
+                logo: "https://www.citypng.com/public/uploads/preview/the-new-york-times-logo-hd-png-701751694705211hmlufbufsp.png", 
+                color: "#000000",
+                bgColor: "#FFFFFF"
+            },
+            { 
+                name: "Disney+", 
+                value: 7.99, 
+                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Disney%2B_logo.svg/1280px-Disney%2B_logo.svg.png", 
+                color: "#0063e5",
+                bgColor: "#FFFFFF"
+            },
+            { 
+                name: "Amazon Prime", 
+                value: 8.99, 
+                logo: "https://m.media-amazon.com/images/G/01/digital/video/web/cw/web/images/primevideo-logo-white._CB1590500131_.png", 
+                color: "#00A8E1",
+                bgColor: "#232F3E"
+            },
+            { 
+                name: "Adobe CC", 
+                value: 19.99, 
+                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Adobe_Creative_Cloud_rainbow_icon.svg/1024px-Adobe_Creative_Cloud_rainbow_icon.svg.png", 
+                color: "#FF0000",
+                bgColor: "#FFFFFF"
+            },
+            { 
+                name: "Microsoft 365", 
+                value: 6.99, 
+                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/2048px-Microsoft_logo.svg.png", 
+                color: "#0078D4",
+                bgColor: "#FFFFFF"
+            }
+        ];
+
+        // Create Light Mode Visualization
+        createBubbleChart('light-visualization', subscriptionData, false);
+        
+        // Create Dark Mode Visualization
+        createBubbleChart('dark-visualization', subscriptionData, true);
+        
+        // Function to create bubble chart visualization
+        function createBubbleChart(elementId, data, isDarkMode) {
+            // Clear any existing content
+            document.getElementById(elementId).innerHTML = '';
+            const badge = document.createElement('div');
+            badge.className = 'subscription-badge';
+            badge.textContent = data.length + ' Subscriptions';
+            document.getElementById(elementId).appendChild(badge);
+
+            // Get container dimensions
+            const container = document.getElementById(elementId);
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            
+            // Create SVG
+            const svg = d3.select(`#${elementId}`)
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
+            
+            // Map values to appropriate radius sizes (scale based on value)
+            const valueExtent = d3.extent(data, d => d.value);
+            const radiusScale = d3.scaleSqrt()
+                .domain(valueExtent)
+                .range([16, 36]); // slightly smaller min and max radius for better fit
+            
+            // Create nodes for force simulation
+            const nodes = data.map(d => {
+                // Adjust color for better contrast with logos if needed
+                let logoBackgroundColor = d.color;
+                
+                // Check which logos need specific background colors
+                let bgColor = "transparent";
+                
+                // Set background colors for specific services
+                if (d.name === "Apple Music") {
+                    bgColor = "#000000"; // Black background for Apple Music
+                } else if (d.name === "Dropbox") {
+                    bgColor = "#0061FF"; // Blue background for Dropbox
+                } else if (d.name === "New York Times") {
+                    bgColor = "#FFFFFF"; // White background for NYT
+                } else if (["Netflix", "Amazon Prime"].includes(d.name)) {
+                    bgColor = "#FFFFFF"; // White background for Netflix and Amazon Prime
+                }
+                
+                // Specific adjustments for problematic logos
+                let logoUrl = d.logo;
+                
+                // Special handling for specific logos
+                if (d.name === "New York Times") {
+                    logoUrl = "https://www.citypng.com/public/uploads/preview/the-new-york-times-logo-hd-png-701751694705211hmlufbufsp.png";
+                    bgColor = "#FFFFFF"; // White background for NYT
+                }
+                
+                return {
+                    ...d,
+                    r: radiusScale(d.value),
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    logoBackground: bgColor,
+                    logoUrl: logoUrl
+                };
+            });
+            
+            // Create force simulation
+            const simulation = d3.forceSimulation(nodes)
+                .force("center", d3.forceCenter(width / 2, height / 2))
+                .force("charge", d3.forceManyBody().strength(5))
+                .force("collide", d3.forceCollide().radius(d => d.r + 5).iterations(8))
+                .on("tick", ticked);
+            
+            // Add boundary forces to keep bubbles within container
+            simulation.force("x", d3.forceX(width / 2).strength(0.05))
+                .force("y", d3.forceY(height / 2).strength(0.05));
+            
+            // Create groups for each subscription
+            const bubbles = svg.selectAll("g")
+                .data(nodes)
+                .enter()
+                .append("g")
+                .attr("class", "bubble-group");
+            
+            // Add circles with background
+            bubbles.append("circle")
+                .attr("class", "bubble")
+                .attr("r", d => d.r)
+                .attr("fill", d => d.color)
+                .attr("stroke", isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.03)")
+                .attr("stroke-width", 0.5);
+            
+            // Add logos inside bubbles
+            bubbles.append("foreignObject")
+                .attr("width", d => d.r * 2)
+                .attr("height", d => d.r * 2)
+                .attr("x", d => -d.r)
+                .attr("y", d => -d.r)
+                .html(d => {
+                    let bgColorStyle = '';
+                    if (d.logoBackground !== 'transparent') {
+                        bgColorStyle = `background-color: ${d.logoBackground};`;
+                    }
+                    
+                    let imgSize = "70%";
+                    // Adjust size for specific logos
+                    if (d.name === "New York Times") {
+                        imgSize = "85%"; // Larger size for NYT logo
+                    }
+                    
+                    return `
+                        <div class="${isDarkMode ? 'dark-logo-container' : 'logo-container'}" 
+                             style="${bgColorStyle}">
+                            <img src="${d.logoUrl}" alt="${d.name}" 
+                                 style="max-width: ${imgSize}; max-height: ${imgSize}; object-fit: contain;" />
+                        </div>
+                    `;
+                });
+            
+            // Add price tags (smaller and more compact)
+            const priceTagGroups = bubbles.append("g")
+                .attr("class", "price-tag-group")
+                .style("pointer-events", "none")
+                .attr("transform", d => `translate(${d.r * 0.2}, ${-d.r * 0.2})`) // Adjusted positioning to overlap with circle
+                .each(function() {
+                    // Ensure these elements are brought to the front
+                    d3.select(this).raise();
+                });
+            
+            priceTagGroups.append("rect")
+                .attr("class", isDarkMode ? "price-tag-bg dark-price-tag-bg" : "price-tag-bg")
+                .attr("width", 38)
+                .attr("height", 16)
+                .attr("rx", 8)
+                .attr("ry", 8);
+            
+            priceTagGroups.append("text")
+                .attr("class", "price-tag-text")
+                .attr("x", 19)
+                .attr("y", 8)
+                .text(d => `€${d.value.toFixed(2)}`);
+            
+            // Remove tooltip and hover title functionality
+            bubbles.on("mouseover", function(event, d) {
+                d3.select(this).select("circle")
+                    .transition()
+                    .duration(300)
+                    .attr("stroke-width", 2)
+                    .attr("stroke", isDarkMode ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.15)");
+                
+                // No longer displaying name on hover
+                
+                // Temporarily stop the simulation during hover
+                simulation.alphaTarget(0).stop();
+            })
+            .on("mouseout", function() {
+                d3.select(this).select("circle")
+                    .transition()
+                    .duration(300)
+                    .attr("stroke-width", 0.5)
+                    .attr("stroke", isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.03)");
+                
+                // Restart the simulation with a small alpha
+                simulation.alphaTarget(0.05).restart();
+            })
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+            
+            // Remove the permanent name display for the most expensive subscription
+            // No longer adding service name below any circle
+            
+            // Tick function to update positions
+            function ticked() {
+                // Constrain the nodes to the container
+                nodes.forEach(function(d) {
+                    d.x = Math.max(d.r + 5, Math.min(width - d.r - 5, d.x));
+                    d.y = Math.max(d.r + 5, Math.min(height - d.r - 5, d.y));
+                });
+                
+                bubbles.attr("transform", d => `translate(${d.x},${d.y})`);
+            }
+            
+            // Drag functions
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+            
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+            
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+        }
+    </script>
+</body>
+</html> 

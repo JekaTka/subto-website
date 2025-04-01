@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Substo - Home Screens</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        .device-frame {
+            width: 375px;
+            height: 750px;
+            border: 2px solid #ddd;
+            border-radius: 45px;
+            overflow: hidden;
+            position: relative;
+            margin: 20px auto;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        /* Dynamic Island */
+        .dynamic-island {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background-color: #000;
+            border-radius: 20px;
+            z-index: 10;
+        }
+        /* Dark mode dynamic island border */
+        .dark-frame .dynamic-island {
+            border: 1px solid #333;
+        }
+        .content-container {
+            padding-top: 60px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .screen-label {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        /* Circular diagram style - improved positioning */
+        .subscription-diagram {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto;
+        }
+        .subscription-icon {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .subscription-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .stats-card {
+            background-color: white;
+            border-radius: 16px;
+            padding: 14px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .dark-stats-card {
+            background-color: #1F1F1F;
+            border-radius: 16px;
+            padding: 14px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        .subscription-list-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eaeaea;
+        }
+        .dark-subscription-list-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
+        }
+        /* Reduced font sizes to prevent overlapping */
+        .price-text {
+            font-size: 2.25rem; /* Smaller than text-4xl */
+            font-weight: bold;
+            line-height: 1.1;
+        }
+        .subscription-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .subscription-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Substo Home Screens</h1>
+        
+        <div class="grid-container">
+            <!-- Home Page - Light Mode -->
+            <div>
+                <p class="screen-label">Home Page - Light Mode</p>
+                <div class="device-frame bg-gray-50">
+                    <div class="dynamic-island"></div>
+                    <div class="flex flex-col h-full p-6">
+                        <div class="content-container">
+                            <h1 class="text-3xl font-bold text-gray-900 mb-6">Overview</h1>
+                            
+                            <!-- Stats Cards Section -->
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <!-- Monthly Payment Card -->
+                                <div class="stats-card">
+                                    <div class="flex items-center space-x-2 text-gray-500 mb-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span class="text-sm">Due this month</span>
+                                    </div>
+                                    <h2 class="price-text text-gray-900">€68.99</h2>
+                                </div>
+                                
+                                <!-- Subscriptions Diagram Card -->
+                                <div class="stats-card flex flex-col items-center justify-center py-3">
+                                    <div class="subscription-diagram">
+                                        <!-- Subscription icons positioned in a circle with proper spacing -->
+                                        <div class="subscription-icon" style="top: 10px; left: 52px;">
+                                            <img src="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.png" alt="Netflix">
+                                        </div>
+                                        <div class="subscription-icon" style="top: 30px; right: 20px;">
+                                            <img src="https://www.dropbox.com/static/30168/images/favicon.ico" alt="Dropbox">
+                                        </div>
+                                        <div class="subscription-icon" style="bottom: 30px; right: 30px;">
+                                            <img src="https://open.spotifycdn.com/cdn/images/favicon32.b64ecc03.png" alt="Spotify">
+                                        </div>
+                                        <div class="subscription-icon" style="bottom: 20px; left: 30px;">
+                                            <img src="https://www.apple.com/favicon.ico" alt="Apple">
+                                        </div>
+                                        <div class="subscription-icon" style="top: 60px; left: 10px;">
+                                            <img src="https://www.hbomax.com/favicon.ico" alt="HBO">
+                                        </div>
+                                    </div>
+                                    <div class="text-center mt-2">
+                                        <span class="text-3xl font-bold text-gray-900">8</span>
+                                        <span class="text-gray-500 ml-2">Active</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Yearly Payment Card -->
+                                <div class="stats-card">
+                                    <div class="flex items-center space-x-2 text-gray-500 mb-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span class="text-sm">Yearly</span>
+                                    </div>
+                                    <h2 class="price-text text-gray-900">€825.45</h2>
+                                </div>
+                                
+                                <!-- Add New Button Card -->
+                                <div class="bg-black text-white rounded-2xl flex items-center justify-center p-4 cursor-pointer hover:bg-gray-800 transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                    </svg>
+                                    <span class="font-medium">Add new</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Upcoming Payments Section -->
+                            <div class="mb-6">
+                                <h2 class="text-2xl font-bold text-gray-900 mb-4">Up next</h2>
+                                
+                                <!-- Upcoming Payment Cards -->
+                                <div class="grid grid-cols-2 gap-3">
+                                    <!-- Netflix Payment Card -->
+                                    <div class="stats-card p-3">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <div class="subscription-logo mr-2">
+                                                    <img src="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.png" alt="Netflix">
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-semibold text-sm">Netflix</h3>
+                                                    <p class="text-xs text-gray-500">in 3 days</p>
+                                                </div>
+                                            </div>
+                                            <span class="font-bold">€14.99</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Spotify Payment Card -->
+                                    <div class="stats-card p-3">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <div class="subscription-logo mr-2">
+                                                    <img src="https://open.spotifycdn.com/cdn/images/favicon32.b64ecc03.png" alt="Spotify">
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-semibold text-sm">Spotify</h3>
+                                                    <p class="text-xs text-gray-500">in 1 week</p>
+                                                </div>
+                                            </div>
+                                            <span class="font-bold">€9.99</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Subscriptions List Section -->
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-900 mb-4">Subscriptions</h2>
+                                
+                                <div class="bg-white rounded-2xl p-4 shadow-sm">
+                                    <!-- Netflix Subscription -->
+                                    <div class="subscription-list-item">
+                                        <div class="subscription-logo mr-3">
+                                            <img src="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.png" alt="Netflix">
+                                        </div>
+                                        <div class="flex-grow">
+                                            <h3 class="font-semibold text-sm">Netflix</h3>
+                                            <p class="text-xs text-gray-500">Renews on 15th</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="font-bold">€14.99</p>
+                                            <p class="text-xs text-gray-500">Monthly</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Spotify Subscription -->
+                                    <div class="subscription-list-item">
+                                        <div class="subscription-logo mr-3">
+                                            <img src="https://open.spotifycdn.com/cdn/images/favicon32.b64ecc03.png" alt="Spotify">
+                                        </div>
+                                        <div class="flex-grow">
+                                            <h3 class="font-semibold text-sm">Spotify</h3>
+                                            <p class="text-xs text-gray-500">Renews on 21st</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="font-bold">€9.99</p>
+                                            <p class="text-xs text-gray-500">Monthly</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Dropbox Subscription -->
+                                    <div class="subscription-list-item border-b-0">
+                                        <div class="subscription-logo mr-3">
+                                            <img src="https://www.dropbox.com/static/30168/images/favicon.ico" alt="Dropbox">
+                                        </div>
+                                        <div class="flex-grow">
+                                            <h3 class="font-semibold text-sm">Dropbox</h3>
+                                            <p class="text-xs text-gray-500">Renews on 3rd</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="font-bold">€8.99</p>
+                                            <p class="text-xs text-gray-500">Monthly</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Home Page - Dark Mode -->
+            <div>
+                <p class="screen-label">Home Page - Dark Mode</p>
+                <div class="device-frame bg-gray-900 dark-frame">
+                    <div class="dynamic-island"></div>
+                    <div class="flex flex-col h-full p-6">
+                        <div class="content-container">
+                            <h1 class="text-3xl font-bold text-white mb-6">Overview</h1>
+                            
+                            <!-- Stats Cards Section -->
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <!-- Monthly Payment Card -->
+                                <div class="dark-stats-card">
+                                    <div class="flex items-center space-x-2 text-gray-400 mb-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span class="text-sm">Due this month</span>
+                                    </div>
+                                    <h2 class="price-text text-white">€68.99</h2>
+                                </div>
+                                
+                                <!-- Subscriptions Diagram Card -->
+                                <div class="dark-stats-card flex flex-col items-center justify-center py-3">
+                                    <div class="subscription-diagram">
+                                        <!-- Subscription icons positioned in a circle with proper spacing -->
+                                        <div class="subscription-icon" style="top: 10px; left: 52px;">
+                                            <img src="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.png" alt="Netflix">
+                                        </div>
+                                        <div class="subscription-icon" style="top: 30px; right: 20px;">
+                                            <img src="https://www.dropbox.com/static/30168/images/favicon.ico" alt="Dropbox">
+                                        </div>
+                                        <div class="subscription-icon" style="bottom: 30px; right: 30px;">
+                                            <img src="https://open.spotifycdn.com/cdn/images/favicon32.b64ecc03.png" alt="Spotify">
+                                        </div>
+                                        <div class="subscription-icon" style="bottom: 20px; left: 30px;">
+                                            <img src="https://www.apple.com/favicon.ico" alt="Apple">
+                                        </div>
+                                        <div class="subscription-icon" style="top: 60px; left: 10px;">
+                                            <img src="https://www.hbomax.com/favicon.ico" alt="HBO">
+                                        </div>
+                                    </div>
+                                    <div class="text-center mt-2">
+                                        <span class="text-3xl font-bold text-white">8</span>
+                                        <span class="text-gray-400 ml-2">Active</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Yearly Payment Card -->
+                                <div class="dark-stats-card">
+                                    <div class="flex items-center space-x-2 text-gray-400 mb-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span class="text-sm">Yearly</span>
+                                    </div>
+                                    <h2 class="price-text text-white">€825.45</h2>
+                                </div>
+                                
+                                <!-- Add New Button Card -->
+                                <div class="bg-white text-black rounded-2xl flex items-center justify-center p-4 cursor-pointer hover:bg-gray-100 transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                    </svg>
+                                    <span class="font-medium">Add new</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Upcoming Payments Section -->
+                            <div class="mb-6">
+                                <h2 class="text-2xl font-bold text-white mb-4">Up next</h2>
+                                
+                                <!-- Upcoming Payment Cards -->
+                                <div class="grid grid-cols-2 gap-3">
+                                    <!-- Netflix Payment Card -->
+                                    <div class="dark-stats-card p-3">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <div class="subscription-logo mr-2">
+                                                    <img src="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.png" alt="Netflix">
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-semibold text-sm">Netflix</h3>
+                                                    <p class="text-xs text-gray-400">in 3 days</p>
+                                                </div>
+                                            </div>
+                                            <span class="font-bold text-white">€14.99</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Spotify Payment Card -->
+                                    <div class="dark-stats-card p-3">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <div class="subscription-logo mr-2">
+                                                    <img src="https://open.spotifycdn.com/cdn/images/favicon32.b64ecc03.png" alt="Spotify">
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-semibold text-sm">Spotify</h3>
+                                                    <p class="text-xs text-gray-400">in 1 week</p>
+                                                </div>
+                                            </div>
+                                            <span class="font-bold text-white">€9.99</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Subscriptions List Section -->
+                            <div>
+                                <h2 class="text-2xl font-bold text-white mb-4">Subscriptions</h2>
+                                
+                                <div class="bg-gray-800 rounded-2xl p-4 shadow-sm">
+                                    <!-- Netflix Subscription -->
+                                    <div class="dark-subscription-list-item">
+                                        <div class="subscription-logo mr-3">
+                                            <img src="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.png" alt="Netflix">
+                                        </div>
+                                        <div class="flex-grow">
+                                            <h3 class="font-semibold text-sm">Netflix</h3>
+                                            <p class="text-xs text-gray-400">Renews on 15th</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="font-bold text-white">€14.99</p>
+                                            <p class="text-xs text-gray-400">Monthly</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Spotify Subscription -->
+                                    <div class="dark-subscription-list-item">
+                                        <div class="subscription-logo mr-3">
+                                            <img src="https://open.spotifycdn.com/cdn/images/favicon32.b64ecc03.png" alt="Spotify">
+                                        </div>
+                                        <div class="flex-grow">
+                                            <h3 class="font-semibold text-sm">Spotify</h3>
+                                            <p class="text-xs text-gray-400">Renews on 21st</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="font-bold text-white">€9.99</p>
+                                            <p class="text-xs text-gray-400">Monthly</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Dropbox Subscription -->
+                                    <div class="dark-subscription-list-item border-b-0">
+                                        <div class="subscription-logo mr-3">
+                                            <img src="https://www.dropbox.com/static/30168/images/favicon.ico" alt="Dropbox">
+                                        </div>
+                                        <div class="flex-grow">
+                                            <h3 class="font-semibold text-sm">Dropbox</h3>
+                                            <p class="text-xs text-gray-400">Renews on 3rd</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="font-bold text-white">€8.99</p>
+                                            <p class="text-xs text-gray-400">Monthly</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
